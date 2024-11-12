@@ -1,0 +1,18 @@
+-- Models tried so far --
+
+# Baseline model: RMSE of 1.58
+
+
+## Baseline with Adam optimizer and lr=1e-4 : RMSE of 1.29
+
+## Same model as above but with dropout=0.3 in all layers: RMSE of 1.40
+
+## Now only with dropout=0.3 in the linear layers: RMSE of 1.24
+
+## Changed dropout to 0.2 and 0.4 but it didn't give better results than dropout=0.3
+
+
+### Tried making a more simple model by keeping the baseline model the same but removing the 4th CNN layer: RMSE of 1.65
+
+
+
