@@ -1,12 +1,12 @@
 
-# Overview
+# Overview:
 
 # Baseline model: RMSE of 1.58
 
 # Current best model: Baseline model with LR=1e-4, BS=16, optimizer=Adam, dropout=0.3 in the two hidden linear layers
 
 
-## Model history
+## Model history:
 
 ## Baseline with Adam optimizer and lr=1e-4 : RMSE of 1.29
 
@@ -19,15 +19,17 @@
 ## Same model as above but with batch size = 16: RMSE of 1.21
 
 
-### Things we tried but failed, or something yet to test
+### Things we tried but failed, or something yet to test:
 
 ### Tried making a more simple model by keeping the baseline model the same by removing the 4th CNN layer: RMSE of 1.65
 
 ### Tried adding in weight decay of 1e-4, 1e-5, 1e-6 but it didn't seem to improve as we got similar or slightly worse results
 
+### Tried creating a scheduled learning rate, which lowers the learning rate in steps or by some criteria, it did not give any better performance, but might need some fine tuning
+
 ### Might want to try some different architecture
 
-### Maybe try Leaky ReLU instead of ReLU in the CNN layers
+### Maybe try Leaky ReLU instead of ReLU in the CNN layers -> Didn't result in anything better
 
 
 
