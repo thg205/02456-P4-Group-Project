@@ -132,8 +132,8 @@ if __name__ == "__main__":
             "transform": "|".join([str(tr).split(".")[1].split(" ")[0] for tr in dataset_train.transform.transforms]),
             "optimizer": OPTIMIZER.__name__,
             "loss_fn": model.loss_fn.__name__,
-            "nfft": NFFT,
-            "weight_decay": WEIGHT_DECAY  # Added weight decay to the config
+            "nfft": NFFT#,
+            #"weight_decay": WEIGHT_DECAY  # Added weight decay to the config
         }
     )
 
