@@ -3,7 +3,7 @@
 
 # Baseline model: RMSE of 1.58
 
-# Current best model: Baseline model with LR=1e-4, BS=16, optimizer=Adam, dropout=0.3 in the two hidden linear layers
+# Current best model: Baseline model with LR=1e-4, BS=16, optimizer=Adam, dropout=0.3 in the two hidden linear layers -> RMSE of 1.21
 
 
 ## Model history:
