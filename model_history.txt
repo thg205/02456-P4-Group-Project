@@ -18,6 +18,8 @@
 
 ## Same model as above but with batch size = 16: RMSE of 1.21
 
+## Then we tried batch normalization, but as it increases model parameters (which was a model constraint) we adjusted the first linear layer to have 512 instead of 1024 input units which results in 19,279,921 parameters: RMSE of 1.52
+
 
 ### Things we tried but failed, or something yet to test:
 
