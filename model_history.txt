@@ -18,7 +18,6 @@
 
 ## Same model as above but with batch size = 16: RMSE of 1.21
 
-## Then we tried batch normalization, but as it increases model parameters (which was a model constraint) we adjusted the first linear layer to have 512 instead of 1024 input units which results in 19,279,921 parameters: RMSE of 1.52
 
 
 ### Things we tried but failed, or something yet to test:
@@ -29,7 +28,7 @@
 
 ### Tried creating a scheduled learning rate, which lowers the learning rate in steps or by some criteria, it did not give any better performance, but might need some fine tuning
 
-### Might want to try some different architecture
+### Might want to try some different architecture -> Did this by changing having 512 units in the first linear layer instead of 1024
 
 ### Maybe try Leaky ReLU instead of ReLU in the CNN layers -> Didn't result in anything better
 
