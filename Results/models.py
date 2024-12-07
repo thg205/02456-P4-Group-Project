@@ -7,6 +7,8 @@ class SpectrVelCNNRegr(nn.Module):
     """Baseline model for regression to the velocity
 
     Use this to benchmark your model performance.
+
+    Number of parameters in model SpectrVelCNNRegr: 38414929 = 3.84e+07
     """
 
     loss_fn = mse_loss
@@ -78,25 +80,132 @@ class SpectrVelCNNRegr(nn.Module):
         x = self._input_layer(input_data)
         x = self._hidden_layer(x)
         return self._output_layer(x)
-
-class YourModel(SpectrVelCNNRegr):
-    """Define your model here.
-
-    I suggest make your changes initial changes
-    to the hidden layers defined in _hidden_layer below.
-    This will preserve the input and output dimensionality.
     
-    Eventually, you will need to update the output dimensionality
-    of the input layer and the input dimensionality of your output
-    layer.
-
+class SpectrVelCNNRegr_w_dropout(SpectrVelCNNRegr):
     """
-    def __init__(self):
+        Added dropout layers for regularization to the linear layers, while still matching the 
+        baseline architecture.
+    """
+
+    def __init__(self, dropout_rate=0.3):
         super().__init__()
+        
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=5, stride=1, padding=2),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2)
+        )
+
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=5, stride=1, padding=2),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2)
+        )
+
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, stride=1, padding=2),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2)
+        )
+
+        self.conv4 = nn.Sequential(
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, stride=1, padding=2),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2)
+        )
+
+        self.flatten = nn.Flatten()
+
+        self.linear1 = nn.Sequential(
+            nn.Linear(in_features=37120, out_features=1024),
+            nn.Dropout(p=dropout_rate)
+        )
+        self.linear2 = nn.Sequential(
+            nn.Linear(in_features=1024, out_features=256),
+            nn.Dropout(p=dropout_rate)
+        )
+        self.linear3 = nn.Linear(in_features=256, out_features=1) 
+
+    def _input_layer(self, input_data):
+        return self.conv1(input_data)
 
     def _hidden_layer(self, x):
-        """Overwrite this function"""
-        pass
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.flatten(x)
+        x = self.linear1(x)
+        return self.linear2(x)
+
+    def _output_layer(self, x):
+        return self.linear3(x)
+
+class Simple_SpectrVelCNNRegr(SpectrVelCNNRegr):
+    """
+        Added dropout layers for regularization, batch normalization and ReLU activation to the linear layers
+        and making the model more simple by having the number of input features 512 in the first linear layer.
+    """
+
+    def __init__(self, dropout_rate=0.3):
+        super().__init__()
+        
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=5, stride=1, padding=2),
+            nn.BatchNorm2d(16),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2)
+        )
+
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=5, stride=1, padding=2),
+            nn.BatchNorm2d(32),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2)
+        )
+
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, stride=1, padding=2),
+            nn.BatchNorm2d(64),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2)
+        )
+
+        self.conv4 = nn.Sequential(
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, stride=1, padding=2),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2)
+        )
+
+        self.flatten = nn.Flatten()
+
+        self.linear1 = nn.Sequential(
+            nn.Linear(in_features=44544, out_features=512),
+            nn.BatchNorm1d(512),
+            nn.ReLU(),  # Add activation here for better flow
+            nn.Dropout(p=dropout_rate)
+        )
+        self.linear2 = nn.Sequential(
+            nn.Linear(in_features=512, out_features=256),
+            nn.BatchNorm1d(256),  # BatchNorm for fully connected layers
+            nn.ReLU(),
+            nn.Dropout(p=dropout_rate)
+        )
+        self.linear3 = nn.Linear(in_features=256, out_features=1) 
+
+    def _input_layer(self, input_data):
+        return self.conv1(input_data)
+
+    def _hidden_layer(self, x):
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.flatten(x)
+        x = self.linear1(x)
+        return self.linear2(x)
+
+    def _output_layer(self, x):
+        return self.linear3(x)
 
 # takes in a module and applies the specified weight initialization
 def weights_init_uniform_rule(m):
